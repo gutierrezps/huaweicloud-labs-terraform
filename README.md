@@ -24,6 +24,7 @@ Terraform.
 
 - 01: VPC and subnet
 - 02: VPC, subnet, secgroup, ECS, IMS, AS
+- 03: VPC, subnet, secgroup, ECS, EIP, ELB
 
 [provider-docs]: <https://registry.terraform.io/providers/huaweicloud/huaweicloud/latest/docs>
 [provider-repo]: <https://github.com/huaweicloud/terraform-provider-huaweicloud>
