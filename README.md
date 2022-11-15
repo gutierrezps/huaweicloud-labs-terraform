@@ -23,6 +23,7 @@ Terraform.
 ### HCIA Cloud Service
 
 - 01: VPC and subnet
+- 02: VPC, subnet, secgroup, ECS, IMS, AS
 
 [provider-docs]: <https://registry.terraform.io/providers/huaweicloud/huaweicloud/latest/docs>
 [provider-repo]: <https://github.com/huaweicloud/terraform-provider-huaweicloud>
