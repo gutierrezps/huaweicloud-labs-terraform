@@ -68,13 +68,19 @@ resource "huaweicloud_images_image" "ecs_img" {
   }
 }
 
+resource "huaweicloud_kps_keypair" "keypair" {
+  name     = "keypair-hcia02"
+  # the keyfile will be downloaded to the current dir
+  key_file = "private_key.pem"
+}
+
 resource "huaweicloud_as_configuration" "as_config" {
   scaling_configuration_name = "as-config-hcia02"
 
   instance_config {
     flavor = "s3.small.1"
     image  = huaweicloud_images_image.ecs_img.id
-    key_name = "test-keypair"
+    key_name = "keypair-hcia02"
 
     disk {
       size        = 40
