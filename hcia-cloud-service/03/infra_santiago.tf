@@ -1,3 +1,6 @@
+########################################################################
+# VPCs and subnets
+
 resource "huaweicloud_vpc" "vpc_1_san" {
   name = "vpc-1-hcia03"
   cidr = "192.168.0.0/16"
@@ -28,6 +31,9 @@ resource "huaweicloud_vpc_subnet" "subnet_2_1_san" {
   gateway_ip = "10.0.0.1"
   vpc_id     = huaweicloud_vpc.vpc_2_san.id
 }
+
+########################################################################
+# ECSs
 
 resource "huaweicloud_networking_secgroup" "secgroup_san" {
   name        = "secgroup-hcia03"
@@ -102,6 +108,10 @@ resource "huaweicloud_compute_instance" "ecs_2_1_san" {
   }
 }
 
+
+########################################################################
+# ELB
+
 resource "huaweicloud_lb_loadbalancer" "elb" {
   name = "elb-hcia03"
   vip_subnet_id = huaweicloud_vpc_subnet.subnet_1_1_san.ipv4_subnet_id
@@ -148,4 +158,37 @@ resource "huaweicloud_lb_member" "member_2" {
   protocol_port = 8889
   pool_id       = huaweicloud_lb_pool.pool_1.id
   subnet_id     = huaweicloud_vpc_subnet.subnet_1_2_san.ipv4_subnet_id
+}
+
+########################################################################
+# VPC peering
+
+resource "huaweicloud_vpc_peering_connection" "peering" {
+  name        = "peering-hcia03"
+  vpc_id      = huaweicloud_vpc.vpc_1_san.id
+  peer_vpc_id = huaweicloud_vpc.vpc_2_san.id
+}
+
+data "huaweicloud_vpc_route_table" "rtb_1_san" {
+  vpc_id = huaweicloud_vpc.vpc_1_san.id
+}
+
+resource "huaweicloud_vpc_route" "peering_route_1" {
+  vpc_id         = huaweicloud_vpc.vpc_1_san.id
+  route_table_id = data.huaweicloud_vpc_route_table.rtb_1_san.id
+  destination    = huaweicloud_vpc_subnet.subnet_2_1_san.cidr
+  type           = "peering"
+  nexthop        = huaweicloud_vpc_peering_connection.peering.id
+}
+
+data "huaweicloud_vpc_route_table" "rtb_2_san" {
+  vpc_id = huaweicloud_vpc.vpc_2_san.id
+}
+
+resource "huaweicloud_vpc_route" "peering_route_2" {
+  vpc_id         = huaweicloud_vpc.vpc_2_san.id
+  route_table_id = data.huaweicloud_vpc_route_table.rtb_2_san.id
+  destination    = huaweicloud_vpc_subnet.subnet_1_1_san.cidr
+  type           = "peering"
+  nexthop        = huaweicloud_vpc_peering_connection.peering.id
 }
