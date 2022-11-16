@@ -1,8 +1,8 @@
 # Huawei Cloud Labs using Terraform
 
 This repository contains Terraform configuration files for the HCIA
-Cloud Service Lab Guides. They were developed as part of self-learning
-Terraform.
+Cloud Service Lab Guides. They were developed as part of 
+Terraform self-study.
 
 [HuaweiCloud Provider Docs][provider-docs]
 
